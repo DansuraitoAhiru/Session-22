@@ -48,7 +48,7 @@ void average(Student *hs, int length){
 		sum+=hs[i].grade;
 	}
 	avg=sum/(length*1.0);
-	printf("Gia tri trung binh cua tat ca cac phan tu l‡: %.1f", avg);
+	printf("Gia tri trung binh cua tat ca cac phan tu l√†: %.1f", avg);
 }  	    
 
 int main(){
