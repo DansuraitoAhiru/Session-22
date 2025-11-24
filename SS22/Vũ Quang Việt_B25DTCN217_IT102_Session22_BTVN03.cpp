@@ -15,6 +15,22 @@ typedef struct{
 	char phoneNumber[50];
 }Student;
 
+int checkDate(int d, int m, int y) {
+    if (y < 1900 || y > 2100) return 0;
+    if (m < 1 || m > 12) return 0;
+    int maxDay;
+    switch(m) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            maxDay = 31; break;
+        case 4: case 6: case 9: case 11:
+            maxDay = 30; break;
+        case 2:
+            maxDay = (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) ? 29 : 28;
+            break;
+    }
+    return d >= 1 && d <= maxDay;
+}
+
 void enterInfo(Student *sv){
 	printf("Nhap ma SV: ");
 	fgets(sv->maSv, sizeof(sv->maSv), stdin);
@@ -23,8 +39,17 @@ void enterInfo(Student *sv){
 	fgets(sv->name, sizeof(sv->name), stdin);
 	sv->name[strcspn(sv->name, "\n")]=0;
 	printf("Nhap ngay/thang/nam sinh: ");
-	scanf("%d %d %d", &sv->sn.date, &sv->sn.month, &sv->sn.year);
-	while(getchar() != '\n');
+	while (1) {
+	    if (scanf("%d %d %d", &sv->sn.date, &sv->sn.month, &sv->sn.year) != 3 ||
+	        !checkDate(sv->sn.date, sv->sn.month, sv->sn.year)) 
+	    {
+	        printf("Ngay thang nam khong hop le! Nhap lai: ");
+	        while (getchar() != '\n'); 
+	    } else {
+	        while (getchar() != '\n');
+	        break;
+	    }
+	}
 	printf("Nhap dia chi: ");
 	fgets(sv->address, sizeof(sv->address), stdin);
 	sv->address[strcspn(sv->address,"\n")]=0;
@@ -202,4 +227,4 @@ int main(){
 			printf("Ko co lua chon %d\n",choice);
 		}
 	}while(choice != 8);
-}	
+}
