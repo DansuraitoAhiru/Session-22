@@ -15,6 +15,22 @@ typedef struct {
 	char status[50];
 }Order;
 
+int checkDate(int d, int m, int y) {
+    if (y < 1900 || y > 2100) return 0;
+    if (m < 1 || m > 12) return 0;
+    int maxDay;
+    switch(m) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            maxDay = 31; break;
+        case 4: case 6: case 9: case 11:
+            maxDay = 30; break;
+        case 2:
+            maxDay = (y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)) ? 29 : 28;
+            break;
+    }
+    return d >= 1 && d <= maxDay;
+}
+
 void enterInfo(Order *don){
 	printf("Nhap ma don hang: ");
 	fgets(don->ma, sizeof(don->ma), stdin);
@@ -23,7 +39,17 @@ void enterInfo(Order *don){
 	fgets(don->name, sizeof(don->name), stdin);
 	don->name[strcspn(don->name, "\n")]=0;
 	printf("Nhap ngay dat hang: ");
-	scanf("%d %d %d", &don->sn.date, &don->sn.month, &don->sn.year);
+	while (1) {
+	    if (scanf("%d %d %d", &don->sn.date, &don->sn.month, &don->sn.year) != 3 ||
+	        !checkDate(don->sn.date, don->sn.month, don->sn.year)) 
+	    {
+	        printf("Ngay thang nam khong hop le! Nhap lai: ");
+	        while (getchar() != '\n'); 
+	    } else {
+	        while (getchar() != '\n');
+	        break;
+	    }
+	}
 	printf("Nhap tong tien: ");
 	scanf("%f", &don->money);
 	while(getchar() != '\n');
@@ -186,4 +212,4 @@ int main(){
 			printf("Ko co lua chon %d\n", choice);
 		}
 	} while (choice != 7);
-}	
+}
